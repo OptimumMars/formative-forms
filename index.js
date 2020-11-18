@@ -23,7 +23,7 @@ const users = [
 ];
 
 const validate = (req, res, next) => {
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
+  const { firstName, lastName, email, password, confirmedPassword } = req.body;
  
   const errors = [];
 
@@ -43,7 +43,7 @@ const validate = (req, res, next) => {
     errors.push("Please provide a password.")
   }
 
-  if(password !== confirmPassword){
+  if(password !== confirmedPassword){
     errors.push("The provided values for the password and password confirmation fields did not match.");
   }
 
@@ -61,7 +61,7 @@ app.get("/create", csrfProtection, (req, res) => {
 });
 
 app.post("/create", csrfProtection, validate, (req, res)=>{
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email} = req.body;
   //console.log(req.body)
   if (req.errors.length > 0) {
     res.render("form", {
@@ -69,11 +69,11 @@ app.post("/create", csrfProtection, validate, (req, res)=>{
       lastName,
       email,
       errors: req.errors,
-    })
-
-    users.push({firstName, lastName, email})
-   // res.redirect("/");
+    })  
+    return;
 }
+    users.push({id:users.length + 1,firstName, lastName, email})
+    res.redirect('/');
 });
 
 
